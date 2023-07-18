@@ -23,7 +23,7 @@ seven segment display.
 
   ![7 Segment AN](https://github.com/LyraN66/HDL---VHDL/assets/101515029/f2d0ab6f-b56f-4f49-b0c0-1b4cca9b0403)
 
-    As seen in the image above, more than one data can't be send on the same time therefore I created a FSM to sent data.
+  As seen in the image above, more than one data can't be send on the same time therefore I created a FSM to sent data.
 
   ---
     case (state)
@@ -42,5 +42,45 @@ seven segment display.
     endcase
   ---
 
-      In the FSM for 7 Segment Display "digit" parameter defines which segment will display the "value" parameter 
-    which is depended on the data which comes from sensor.
+  In the FSM for 7 Segment Display "digit" parameter defines which segment will display the "value" parameter 
+which is depended on the data which comes from sensor.
+
+## ADT7420 Temperature Sensor Section
+
+  ADT7420 use I2C for communication as specified in the datasheet master should pull down sda while scl is high 
+which gives a start bit for communication. Then I send the slave address (0x4B) + R/W bit , then master waits an 
+ack from slave. After receiving ack I send the internal register address which I want to read data from there then
+again waits an ack from slave after this we are reading the data while SCL is high.
+
+![ADT7420 Timing](https://github.com/LyraN66/HDL---VHDL/assets/101515029/f27acbbc-b60b-4f77-8f29-ced53225c083)
+
+  In the datasheet of ADT7420 SCL timing is showed clearly. According to these values I created parameter which are used in FSM of sensor.
+  
+  ---
+    localparam TIME_1SEC   =50000000; //(INTERVAL/CLK_PER);// Clock ticks in 1 sec
+    localparam TIME_THDSTA =60; //(600/CLK_PER);     // 0.6 us
+    localparam TIME_TSUSTA =60; //(600/CLK_PER);     // 0.6 us
+    .
+    .
+    .
+  ---
+
+![ADT7420 Slave Address](https://github.com/LyraN66/HDL---VHDL/assets/101515029/8f59be1d-5bf8-45d7-85a3-769e252af304)
+![ADT7420 Data Register](https://github.com/LyraN66/HDL---VHDL/assets/101515029/8caea4a4-bdeb-4890-ada1-e694596790c5)
+![ADT7420 Data](https://github.com/LyraN66/HDL---VHDL/assets/101515029/23cc6bad-5757-4a06-bd87-13ad5e25cc26)
+
+  In 13 bit reading mode ADT7420 gives a 0.0625 °C per bit which requires a conversion part.
+  
+![FSM](https://github.com/LyraN66/HDL---VHDL/assets/101515029/c71d0099-ea4b-45e1-99fa-577d0c7c12e9)
+
+  As a last thing FSM for sensor is showed in the above image. It checks the number of data bit to decide to finish or continue. 
+
+
+
+
+
+
+
+
+
+  
