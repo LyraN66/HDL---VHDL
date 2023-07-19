@@ -1,5 +1,5 @@
 # Reading Temperature Data and Displaying on the 7 Segment
-
+https://github.com/LyraN66/HDL---VHDL/assets/101515029/0734cc09-a930-409d-a7a3-e13c0364f6e4
 
   In this project I read the 13 bit (1 sign bit 12 data bit) temperature data from ADT7420 which is embedded on Nexys 4 DDR (Nexys A7 100T ) board and displayed on the
 seven segment display.
