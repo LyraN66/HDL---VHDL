@@ -1,4 +1,6 @@
 # Reading Temperature Data and Displaying on the 7 Segment
+
+
   In this project I read the 13 bit (1 sign bit 12 data bit) temperature data from ADT7420 which is embedded on Nexys 4 DDR (Nexys A7 100T ) board and displayed on the
 seven segment display.
 
@@ -73,7 +75,17 @@ again waits an ack from slave after this we are reading the data while SCL is hi
   
 ![ADT7420 Data Register](https://github.com/LyraN66/HDL---VHDL/assets/101515029/8caea4a4-bdeb-4890-ada1-e694596790c5)
 
-  In the image below resolution of the sensor is 
+  In the image below resolution of the sensor is stated. In 16 bit of data first 3 bit (0.,1. and 2.) are reserved 
+for flags and last bit (15.) is reserved for sign bit. Therefore [15:3] bits are data bits. Multipliying with 0.0625
+per bit means also shifting right by 4 bit. Therefore last 4 bit of data portion represents the fraction part of the data.
+
+  ---
+                integer_digit_2 <= conversion_integer_data / 10;
+                integer_digit_1 <= conversion_integer_data % 10;
+                fraction_digit_2 <= conversion_fraction_data / 1000;
+                fraction_digit_1_temp <= conversion_fraction_data % 1000;
+                fraction_digit_1 <= fraction_digit_1_temp / 100;
+  ---
 
 ![ADT7420 Data](https://github.com/LyraN66/HDL---VHDL/assets/101515029/23cc6bad-5757-4a06-bd87-13ad5e25cc26)
 
