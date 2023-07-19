@@ -74,16 +74,22 @@ module ADT7420_Temperature_Sensor_Final(
     localparam TSTO = 3'b110;
     
     initial begin
-        integer_values[0] = zero;
-        integer_values[1] = one;
-        integer_values[2] = two;
-        integer_values[3] = three;
-        integer_values[4] = four;
-        integer_values[5] = five;
-        integer_values[6] = six;
-        integer_values[7] = seven;
-        integer_values[8] = eight;
-        integer_values[9] = nine;
+        integer_values[0] = 8'b00000011;    // 0
+        integer_values[1] = 8'b10011111;    // 1 
+        integer_values[2] = 8'b00100101;    // 2
+        integer_values[3] = 8'b00001101;    // 3
+        integer_values[4] = 8'b10011001;    // 4
+        integer_values[5] = 8'b01001001;    // 5
+        integer_values[6] = 8'b01000001;    // 6
+        integer_values[7] = 8'b00011111;    // 7
+        integer_values[8] = 8'b00000001;    // 8
+        integer_values[9] = 8'b00011001;    // 9
+        integer_values[10] = 8'b00010001;   // A
+        integer_values[11] = 8'b11000001;   // b
+        integer_values[12] = 8'b01100011;   // C
+        integer_values[13] = 8'b10000101;   // d
+        integer_values[14] = 8'b01100001;   // E
+        integer_values[15] = 8'b01110001;   // F
         
         temp_data <= 16'b0;
         scl_en          = 1'b0;
@@ -215,25 +221,9 @@ module ADT7420_Temperature_Sensor_Final(
     reg clk_updated = 1'b0;
     reg [7:0] digit = 8'b11111111;  // decide the location on display
     reg [7:0] value = 8'b11111111;  // decides the value which will be written
-    // values for numbers
-    reg [7:0] zero  = 8'b00000011;
-    reg [7:0] one   = 8'b10011111;
-    reg [7:0] two   = 8'b00100101; 
-    reg [7:0] three = 8'b00001101;
-    reg [7:0] four  = 8'b10011001;
-    reg [7:0] five  = 8'b01001001;
-    reg [7:0] six   = 8'b01000001;
-    reg [7:0] seven = 8'b00011111;
-    reg [7:0] eight = 8'b00000001;
-    reg [7:0] nine  = 8'b00011001;
+    
     reg [7:0] degree= 8'b00111001;
     // values for letters 
-    reg [7:0] Aletter = 8'b00010001;    
-    reg [7:0] bletter = 8'b11000001;    
-    reg [7:0] Cletter = 8'b01100011;    
-    reg [7:0] dletter = 8'b10000101;    
-    reg [7:0] Eletter = 8'b01100001;    
-    reg [7:0] Fletter = 8'b01110001;
     
     // FSM regs 
     reg [3:0] state = 3'b011;
@@ -245,7 +235,7 @@ module ADT7420_Temperature_Sensor_Final(
     reg [3:0] AN_5=3'b101;
     reg [3:0] AN_6=3'b110;
     reg [3:0] AN_7=3'b111;
-    reg [7:0] integer_values[0:10];
+    reg [7:0] integer_values[0:15];
     
     
     always @(posedge clk) begin
@@ -271,7 +261,7 @@ module ADT7420_Temperature_Sensor_Final(
             case (state)
             AN_0: begin
                 digit <= 8'b11111110; 
-                value <= Cletter;
+                value <= integer_values[12];
                 state <= AN_1;
             end
             AN_1: begin
@@ -302,12 +292,12 @@ module ADT7420_Temperature_Sensor_Final(
             end
             AN_6: begin
                 digit <= 8'b11111111; // activate it like digit <= 8'b10111111;
-                value <= two;
+                value <= integer_values[13];
                 state <= AN_7;
             end
             AN_7: begin
                 digit <= 8'b11111111; // activate it like digit <= 8'b01111111; 
-                value <= one;
+                value <= integer_values[13];
                 state <= AN_0;
             end            
             endcase
