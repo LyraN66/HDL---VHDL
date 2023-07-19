@@ -66,7 +66,15 @@ again waits an ack from slave after this we are reading the data while SCL is hi
   ---
 
 ![ADT7420 Slave Address](https://github.com/LyraN66/HDL---VHDL/assets/101515029/8f59be1d-5bf8-45d7-85a3-769e252af304)
+
+  ---
+    localparam I2C_ADDR = 7'b1001011; // 0x4B
+  ---
+  
 ![ADT7420 Data Register](https://github.com/LyraN66/HDL---VHDL/assets/101515029/8caea4a4-bdeb-4890-ada1-e694596790c5)
+
+  In the image below resolution of the sensor is 
+
 ![ADT7420 Data](https://github.com/LyraN66/HDL---VHDL/assets/101515029/23cc6bad-5757-4a06-bd87-13ad5e25cc26)
 
   In 13 bit reading mode ADT7420 gives a 0.0625 °C per bit which requires a conversion part.
