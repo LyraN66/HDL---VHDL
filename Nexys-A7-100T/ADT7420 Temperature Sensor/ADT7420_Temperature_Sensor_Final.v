@@ -35,8 +35,6 @@ module ADT7420_Temperature_Sensor_Final(
     /////////////////////////////////////////////////////////////////////////////
     //  ADT7420 FSM Section
     ////////////////////////////////////////////////////////////////////////////
-    parameter INTERVAL = 1000000000;
-    parameter CLK_PER = 10;
     
     localparam TIME_1SEC   =50000000; //(INTERVAL/CLK_PER);// Clock ticks in 1 sec
     localparam TIME_THDSTA =60; //(600/CLK_PER);     // 0.6 us
