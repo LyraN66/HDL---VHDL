@@ -11,36 +11,35 @@ seven segment display.
   
   Some of the numbers/letters shown down here
   ---
-    reg [7:0] zero  = 8'b00000011;
-    reg [7:0] one   = 8'b10011111;
-    reg [7:0] two   = 8'b00100101; 
-    reg [7:0] three = 8'b00001101;
-    .
-    .
-    .
-    reg [7:0] Aletter = 8'b00010001;    
-    reg [7:0] bletter = 8'b11000001;    
-    reg [7:0] Cletter = 8'b01100011;
+        integer_values[0] <= 8'b00000011;    // 0
+        integer_values[1] <= 8'b10011111;    // 1 
+        integer_values[2] <= 8'b00100101;    // 2
+        integer_values[3] <= 8'b00001101;    // 3
+        integer_values[4] <= 8'b10011001;    // 4
+        integer_values[5] <= 8'b01001001;    // 5
+        .
+        .
+        .
+        integer_values[10] <= 8'b00010001;   // A
+        integer_values[11] <= 8'b11000001;   // b
+        integer_values[12] <= 8'b01100011;   // C
   ---
 
   ![7 Segment AN](https://github.com/LyraN66/HDL---VHDL/assets/101515029/f2d0ab6f-b56f-4f49-b0c0-1b4cca9b0403)
 
-  As seen in the image above, more than one data can't be send on the same time therefore I created a FSM to sent data.
+  As seen in the image above, more than one data can't be send on the same time. Therefore I created a loop 
+which start from 0. segment till 7.segment and takes the data from sensor.
 
   ---
-    case (state)
-            AN_0: begin
-                digit <= 8'b11111110; 
-                value <= Cletter;
-                state <= AN_1;
+            digit <= (state==0) ? digit : digit - 2**(state-1);
+            value <= text[state];
+            if(state==8)begin
+                state <= 3'b000;
+                digit <= 8'b11111110;
             end
-            AN_1: begin
-                digit <= 8'b11111101;
-                value <= degree;
-                state <= AN_2;
-                .
-                .
-                .
+            else begin
+                state <=  state + 1;
+            end
     endcase
   ---
 
