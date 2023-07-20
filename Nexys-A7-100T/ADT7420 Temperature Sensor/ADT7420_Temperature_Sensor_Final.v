@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
-// Engineer: Ethem Bu?ra Arslan
+// Engineer: Ethem Buğra Arslan
 // 
 // Create Date: 18.07.2023 11:06:10
 // Design Name: 
@@ -19,7 +19,6 @@
 // Additional Comments:
 //              
 //////////////////////////////////////////////////////////////////////////////////
-
 
 module ADT7420_Temperature_Sensor_Final(
     // ADT7420 Part
@@ -74,33 +73,12 @@ module ADT7420_Temperature_Sensor_Final(
     localparam TSTO = 3'b110;
     
     initial begin
-        integer_values[0] = 8'b00000011;    // 0
-        integer_values[1] = 8'b10011111;    // 1 
-        integer_values[2] = 8'b00100101;    // 2
-        integer_values[3] = 8'b00001101;    // 3
-        integer_values[4] = 8'b10011001;    // 4
-        integer_values[5] = 8'b01001001;    // 5
-        integer_values[6] = 8'b01000001;    // 6
-        integer_values[7] = 8'b00011111;    // 7
-        integer_values[8] = 8'b00000001;    // 8
-        integer_values[9] = 8'b00011001;    // 9
-        integer_values[10] = 8'b00010001;   // A
-        integer_values[11] = 8'b11000001;   // b
-        integer_values[12] = 8'b01100011;   // C
-        integer_values[13] = 8'b10000101;   // d
-        integer_values[14] = 8'b01100001;   // E
-        integer_values[15] = 8'b01110001;   // F
-        
         temp_data <= 16'b0;
         scl_en          = 1'b0;
         sda_en          = 1'b0;
         counter_reset   = 1'b0;
         counter         = 32'b0;
         bit_count       = 30'b0;
-            AN_X_Display <= 8'b11111111;
-            i <= 0;
-            value <= 8'b11111111;
-            state <= 3'b000;
     end
     
     always @(posedge clk)begin
@@ -216,17 +194,20 @@ module ADT7420_Temperature_Sensor_Final(
     /////////////////////////////////////////////////////////////////////////////
     //  7 Segment Display Section
     ////////////////////////////////////////////////////////////////////////////
-    integer i = 200000 ;
-    reg [19:0 ] counter_1 = 20'b0;
-    reg clk_updated = 1'b0;
-    reg [7:0] digit = 8'b11111111;  // decide the location on display
-    reg [7:0] value = 8'b11111111;  // decides the value which will be written
+    
+    reg [7:0] text [0:7];
+    reg [7:0] integer_values [0:15];
+    reg [7:0] empty ;
+    
+    reg [19:0 ] counter_for_seven_segment;
+    reg clk_updated;
+    reg [7:0] digit;  // decide the location on display
+    reg [7:0] value;  // decides the value which will be written
     
     reg [7:0] degree= 8'b00111001;
-    // values for letters 
     
     // FSM regs 
-    reg [3:0] state = 3'b011;
+    reg [3:0] state = 3'b000;
     reg [3:0] AN_0=3'b000;
     reg [3:0] AN_1=3'b001;
     reg [3:0] AN_2=3'b010;
@@ -235,73 +216,76 @@ module ADT7420_Temperature_Sensor_Final(
     reg [3:0] AN_5=3'b101;
     reg [3:0] AN_6=3'b110;
     reg [3:0] AN_7=3'b111;
-    reg [7:0] integer_values[0:15];
     
+    initial begin
+        empty <= 8'b11111111;
+        counter_for_seven_segment <= 20'b0;
+        clk_updated <= 1'b0;
+        digit <= 8'b11111110;
+        AN_X_Display <= 8'b11111111;
+        value <= 8'b11111111;
+        state <= 3'b001;
+        integer_values[0] <= 8'b00000011;    // 0
+        integer_values[1] <= 8'b10011111;    // 1 
+        integer_values[2] <= 8'b00100101;    // 2
+        integer_values[3] <= 8'b00001101;    // 3
+        integer_values[4] <= 8'b10011001;    // 4
+        integer_values[5] <= 8'b01001001;    // 5
+        integer_values[6] <= 8'b01000001;    // 6
+        integer_values[7] <= 8'b00011111;    // 7
+        integer_values[8] <= 8'b00000001;    // 8
+        integer_values[9] <= 8'b00011001;    // 9
+        integer_values[10] <= 8'b00010001;   // A
+        integer_values[11] <= 8'b11000001;   // b
+        integer_values[12] <= 8'b01100011;   // C
+        integer_values[13] <= 8'b10000101;   // d
+        integer_values[14] <= 8'b01100001;   // E
+        integer_values[15] <= 8'b01110001;   // F
+        
+        text[0] <= 8'b0;        
+        text[1] <= 8'b0;        
+        text[2] <= 8'b0;        
+        text[3] <= 8'b0;        
+        text[4] <= 8'b0;        
+        text[5] <= 8'b0;        
+        text[6] <= 8'b0;        
+        text[7] <= 8'b0;
+    end
     
     always @(posedge clk) begin
-        if (counter_1 == 0) begin
+        if (counter_for_seven_segment == 0) begin
             clk_updated <= ~clk_updated;
-            counter_1 <= 50000;
+            counter_for_seven_segment <= 50000;
         end
         else begin
-            counter_1 <= counter_1 - 1;
+            counter_for_seven_segment <= counter_for_seven_segment - 1;
         end
     end
-
+    
     always @(posedge clk_updated) begin
         CX_Display <= value;
         AN_X_Display <= digit;
-        
-        integer_value_2 = integer_values[integer_digit_2];
-        integer_value_1 = integer_values[integer_digit_1];
-        fraction_value_2 = integer_values[fraction_digit_2];
-        fraction_value_1 = integer_values[fraction_digit_1];
-         
+
+        text[7] <= empty;
+        text[6] <= empty;
+        text[5] <= integer_values[integer_digit_2];
+        text[4] <= integer_values[integer_digit_1]-1;
+        text[3] <= integer_values[fraction_digit_2];
+        text[2] <= integer_values[fraction_digit_1];
+        text[1] <= 8'b00111001;
+        text[0] <= integer_values[12];     
+
         if(clk_updated) begin
-            case (state)
-            AN_0: begin
-                digit <= 8'b11111110; 
-                value <= integer_values[12];
-                state <= AN_1;
+            digit <= (state==0) ? digit : digit - 2**(state-1);
+            value <= text[state];
+            if(state==8)begin
+                state <= 3'b000;
+                digit <= 8'b11111110;
             end
-            AN_1: begin
-                digit <= 8'b11111101;
-                value <= degree;
-                state <= AN_2;
+            else begin
+                state <=  state + 1;
             end
-            AN_2: begin
-                digit <= 8'b11111011; 
-                value <= fraction_value_1;
-                state <= AN_3;
-            end
-            AN_3: begin
-                digit <= 8'b11110111; 
-                value <= fraction_value_2;
-                state <= AN_4;
-            end
-            AN_4: begin
-                digit <= 8'b11101111; 
-                value <= integer_value_1;
-                value[0] <= 1'b0;   // used for dot
-                state <= AN_5;
-            end
-            AN_5: begin
-                digit <= 8'b11011111; 
-                value <= integer_value_2;
-                state <= AN_6;
-            end
-            AN_6: begin
-                digit <= 8'b11111111; // activate it like digit <= 8'b10111111;
-                value <= integer_values[13];
-                state <= AN_7;
-            end
-            AN_7: begin
-                digit <= 8'b11111111; // activate it like digit <= 8'b01111111; 
-                value <= integer_values[13];
-                state <= AN_0;
-            end            
-            endcase
-        end    
+         end    
     end
 endmodule
     ////////////////////////////////////////////////////////////////////////////
