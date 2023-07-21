@@ -206,17 +206,6 @@ module ADT7420_Temperature_Sensor_Final(
     
     reg [7:0] degree= 8'b00111001;
     
-    // FSM regs 
-    reg [3:0] state = 3'b000;
-    reg [3:0] AN_0=3'b000;
-    reg [3:0] AN_1=3'b001;
-    reg [3:0] AN_2=3'b010;
-    reg [3:0] AN_3=3'b011;
-    reg [3:0] AN_4=3'b100;
-    reg [3:0] AN_5=3'b101;
-    reg [3:0] AN_6=3'b110;
-    reg [3:0] AN_7=3'b111;
-    
     initial begin
         empty <= 8'b11111111;
         counter_for_seven_segment <= 20'b0;
